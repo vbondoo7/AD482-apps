@@ -9,12 +9,15 @@ import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.streams.KafkaStreams;
 import org.apache.kafka.streams.KeyValue;
 import org.apache.kafka.streams.StreamsBuilder;
+import org.apache.kafka.streams.Topology;
 import org.apache.kafka.streams.kstream.Consumed;
 import org.apache.kafka.streams.kstream.Produced;
 import org.jboss.logging.Logger;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.event.Observes;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.event.Observes;
+import jakarta.enterprise.inject.Produces;
+import jakarta.inject.Named;
 
 @ApplicationScoped
 public class AmountWasDepositedPipeline extends StreamProcessor {
@@ -29,6 +32,9 @@ public class AmountWasDepositedPipeline extends StreamProcessor {
     private KafkaStreams streams;
 
     void onStart(@Observes StartupEvent startupEvent) {
+    //@Produces
+    //@Named("amountWasDepositedTopology")
+    //public Topology buildTopology() {
         StreamsBuilder builder = new StreamsBuilder();
 
         ObjectMapperSerde<AmountWasDeposited> depositEventSerde
@@ -55,6 +61,7 @@ public class AmountWasDepositedPipeline extends StreamProcessor {
             Produced.with(Serdes.Long(), highValueEventSerde)
         );
 
+        //return builder.build();
         // TODO: Create a Kafka streams and start it
         streams = new KafkaStreams(
             builder.build(),

@@ -15,13 +15,13 @@ import org.eclipse.microprofile.reactive.messaging.Emitter;
 import org.jboss.logging.Logger;
 import org.jboss.resteasy.annotations.jaxrs.PathParam;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-import javax.transaction.Transactional;
-import javax.ws.rs.*;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.ext.ExceptionMapper;
-import javax.ws.rs.ext.Provider;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+import jakarta.transaction.Transactional;
+import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.ext.ExceptionMapper;
+import jakarta.ws.rs.ext.Provider;
 import java.util.List;
 
 @Path("accounts")
@@ -74,6 +74,7 @@ public class AccountResource {
     @Path("{id}/deposit")
     public BankAccount deposit(@PathParam Long id, DepositAmountInBankAccount deposit) {
 
+    	LOGGER.infov("Deposit request :: bank account - ID: {}, Amount : {}", id, deposit.amount);
         BankAccount entity = depositAmountInBankAccount(id, deposit);
 
         notifyAboutDeposit(deposit);
@@ -85,6 +86,8 @@ public class AccountResource {
     @Path("{id}/withdraw")
     public BankAccount withdraw(@PathParam Long id, WithdrawAmountFromBankAccount withdrawal) {
 
+    	LOGGER.infov("Withdraw request :: bank account - ID: {}, Amount : {}", id, withdrawal.amount);
+        
         BankAccount entity = withdrawAmountFromBankAccount(id, withdrawal);
 
         notifyAboutWithdrawal(withdrawal);

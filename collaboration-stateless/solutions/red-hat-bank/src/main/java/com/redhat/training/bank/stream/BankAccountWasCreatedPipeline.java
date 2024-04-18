@@ -1,19 +1,20 @@
 package com.redhat.training.bank.stream;
 
-import com.redhat.training.bank.event.BankAccountWasCreated;
-import com.redhat.training.bank.model.BankAccount;
-import io.quarkus.kafka.client.serialization.ObjectMapperSerde;
-import io.quarkus.runtime.ShutdownEvent;
-import io.quarkus.runtime.StartupEvent;
 import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.streams.KafkaStreams;
 import org.apache.kafka.streams.StreamsBuilder;
+import org.apache.kafka.streams.Topology;
 import org.apache.kafka.streams.kstream.Consumed;
 import org.jboss.logging.Logger;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.event.Observes;
-import javax.transaction.Transactional;
+import com.redhat.training.bank.event.BankAccountWasCreated;
+import com.redhat.training.bank.model.BankAccount;
+
+import io.quarkus.kafka.client.serialization.ObjectMapperSerde;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.inject.Produces;
+import jakarta.inject.Named;
+import jakarta.transaction.Transactional;
 
 @ApplicationScoped
 public class BankAccountWasCreatedPipeline extends  StreamProcessor {
@@ -24,7 +25,10 @@ public class BankAccountWasCreatedPipeline extends  StreamProcessor {
 
     private KafkaStreams streams;
 
-    void onStart(@Observes StartupEvent startupEvent) {
+    //void onStart(@Observes StartupEvent startupEvent) {
+    @Produces
+    //@Named("bankAccountWasCreatedTopology")
+    public Topology buildTopology() {
         StreamsBuilder builder = new StreamsBuilder();
 
         ObjectMapperSerde<BankAccountWasCreated> eventSerde
@@ -39,18 +43,20 @@ public class BankAccountWasCreatedPipeline extends  StreamProcessor {
         });
 
         // TODO: Create a Kafka streams and start it
-        streams = new KafkaStreams(
+       /* streams = new KafkaStreams(
             builder.build(),
             generateStreamConfig()
         );
 
-        streams.start();
+        streams.start();*/
+        
+        return builder.build();
     }
 
-    void onStop(@Observes ShutdownEvent shutdownEvent) {
+   /* void onStop(@Observes ShutdownEvent shutdownEvent) {
         // TODO: Close the stream on shutdown
         streams.close();
-    }
+    }*/
 
     @Transactional
     public void updateAccountTypeFromEvent(BankAccountWasCreated event) {

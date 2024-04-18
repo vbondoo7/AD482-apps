@@ -10,21 +10,21 @@ public abstract class StreamProcessor {
     @ConfigProperty(name = "quarkus.kafka-streams.bootstrap-servers")
     String bootstrapServers;
 
-    @ConfigProperty(name = "kafka.security.protocol")
+    /*@ConfigProperty(name = "kafka.security.protocol", "")
     String securityProtocol;
 
-    @ConfigProperty(name = "kafka.ssl.truststore.location")
+    @ConfigProperty(name = "kafka.ssl.truststore.location", "")
     String truststoreLocation;
 
-    @ConfigProperty(name = "kafka.ssl.truststore.password")
-    String truststorePassword;
+    @ConfigProperty(name = "kafka.ssl.truststore.password", "")
+    String truststorePassword;*/
 
     protected Properties generateStreamConfig() {
         Properties props = new Properties();
 
-        props.put("security.protocol", securityProtocol);
+        /*props.put("security.protocol", securityProtocol);
         props.put("ssl.truststore.location", truststoreLocation);
-        props.put("ssl.truststore.password", truststorePassword);
+        props.put("ssl.truststore.password", truststorePassword);*/
 
         props.put(
                 StreamsConfig.APPLICATION_ID_CONFIG,
